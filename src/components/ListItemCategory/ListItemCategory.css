@@ -1,0 +1,27 @@
+nav {
+  position: relative;
+}
+nav > ul > li {
+  font-weight: 400;
+  padding: 30px;
+  cursor: pointer;
+  transition: color 0.5s;
+}
+
+nav > ul > li.active {
+  color: #5ece7b;
+}
+
+nav > ul > li:hover {
+  color: #5ece7b;
+}
+nav > ul > div {
+  position: absolute;
+  bottom: 0px;
+  height: 2px;
+  width: 100px;
+  background-color: #5ece7b;
+  z-index: 9;
+  border-radius: 2px;
+  transition: 0.35s ease-in-out;
+}

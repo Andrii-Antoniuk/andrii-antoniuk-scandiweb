@@ -1,0 +1,10 @@
+#category-page {
+  padding: 5rem calc((20vw - 41px) / 2);
+}
+
+h1 {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+  margin: 0;
+  text-transform: capitalize;
+}

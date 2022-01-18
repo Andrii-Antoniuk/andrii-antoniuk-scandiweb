@@ -1,0 +1,65 @@
+.dd-wrapper {
+  width: 40%;
+  display: flex;
+  justify-content: flex-end;
+  height: 100%;
+  align-items: center;
+  position: relative;
+}
+#currency {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  height: 20px;
+  width: 18px;
+  padding-right: 10px;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+#currency > span {
+  display: inline-block;
+  width: 10px;
+}
+
+#arrow {
+  width: 5px;
+  height: 5px;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  display: inline-block;
+  transform: rotate(0.125turn);
+  position: relative;
+  left: 7px;
+  bottom: 2px;
+  transition: transform 0.5s;
+}
+#arrow.reverse {
+  transform: rotate(0.625turn);
+}
+#switch {
+  position: absolute;
+  top: 65px;
+  right: -29px;
+  /*  29px is margin+length of currency */
+
+  box-shadow: 0 0 20px #e0e0e0;
+}
+#switch ul {
+  display: flex;
+  flex-direction: column;
+}
+#switch li {
+  padding-top: 20px;
+  transition: color 0.5s;
+}
+#switch span {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0 40px 0 20px;
+}
+#switch li:last-child {
+  padding-bottom: 20px;
+}
+#switch li:hover {
+  color: #5ece7b;
+}

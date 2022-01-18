@@ -1,0 +1,27 @@
+header {
+  width: 100vw;
+  height: 5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+header > nav {
+  width: 40%;
+}
+
+header > nav > ul {
+  text-transform: uppercase;
+}
+
+ul {
+  margin: 0px;
+  padding: 0;
+  display: flex;
+  list-style-type: none;
+}
+
+li {
+  font-family: 'Raleway', sans-serif;
+}
