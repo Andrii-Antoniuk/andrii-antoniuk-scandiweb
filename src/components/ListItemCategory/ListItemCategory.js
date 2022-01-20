@@ -9,11 +9,47 @@ export class ListItemCategory extends React.Component {
 
     this.state = {
       style: {
-        width: this.props.widths[0],
+        width:
+          this.props.widths[
+            this.props.categories.findIndex(
+              (element) => element === this.props.activeCategory
+            )
+          ],
         left: 0,
       },
     };
   }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.categories.length !== this.props.categories.length ||
+      this.props.widths.length !== prevProps.widths.length
+    ) {
+      let widths = this.props.widths;
+      let widthLeft = 0;
+      this.props.categories.findIndex(
+        (element) => element === this.props.activeCategory
+      );
+      for (let i = 0; i < widths.length; i++) {
+        if (
+          i ===
+          this.props.categories.findIndex(
+            (element) => element === this.props.activeCategory
+          )
+        ) {
+          break;
+        }
+        widthLeft += widths[i];
+      }
+      this.setState({
+        style: {
+          ...this.state.style,
+          left: widthLeft,
+        },
+      }); //
+    }
+  }
+
   handleClick(event) {
     const liItemIndex = parseInt(event.target.classList[0]);
 

@@ -12,8 +12,10 @@ class App extends React.Component {
     this.handleActiveCurrencyChange =
       this.handleActiveCurrencyChange.bind(this);
     this.state = {
-      activeCurrency: 'USD',
-      activeCategory: 'all',
+      activeCurrency:
+        JSON.parse(localStorage.getItem('activeCurrency')) || 'USD',
+      activeCategory:
+        JSON.parse(localStorage.getItem('activeCategory')) || 'all',
       categoriesNames: [],
       isShowingCart: false,
     };
@@ -26,14 +28,30 @@ class App extends React.Component {
   }
 
   handleActiveCurrencyChange(event) {
-    this.setState({
-      activeCurrency: event.target.textContent.toString().slice(-3),
-    });
+    this.setState(
+      {
+        activeCurrency: event.target.textContent.toString().slice(-3),
+      },
+      () => {
+        localStorage.setItem(
+          'activeCurrency',
+          JSON.stringify(this.state.activeCurrency)
+        );
+      }
+    );
   }
   handleActiveCategoryChange(event) {
-    this.setState({
-      activeCategory: event.target.textContent,
-    });
+    this.setState(
+      {
+        activeCategory: event.target.textContent,
+      },
+      () => {
+        localStorage.setItem(
+          'activeCategory',
+          JSON.stringify(this.state.activeCategory)
+        );
+      }
+    );
   }
 
   render() {
