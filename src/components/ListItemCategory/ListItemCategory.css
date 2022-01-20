@@ -21,7 +21,6 @@ nav > ul > div {
   height: 2px;
   width: 100px;
   background-color: #5ece7b;
-  z-index: 9;
   border-radius: 2px;
   transition: 0.35s ease-in-out;
 }

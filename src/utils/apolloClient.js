@@ -42,6 +42,7 @@ export const getCategoryProducts = async (categoryName) => {
             id
             name
             inStock
+            gallery
             description
             category
             attributes {
@@ -68,8 +69,7 @@ export const getCategoryProducts = async (categoryName) => {
     `,
     })
     .catch((err) => console.log(err));
-  return {
-    name: data.data.category.name,
-    products: data.data.category.products,
-  };
+  return data.data.category.products;
+
+  /* name: data.data.category.name, */
 };

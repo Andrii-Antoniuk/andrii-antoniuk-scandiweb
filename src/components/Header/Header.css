@@ -1,5 +1,7 @@
 header {
-  width: 100vw;
+  /* width: 100vw; 
+  caused bug with scroll-x. This is not required, so remove it
+  */
   height: 5rem;
   display: flex;
   flex-direction: row;

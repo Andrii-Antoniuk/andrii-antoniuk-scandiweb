@@ -15,6 +15,7 @@ class App extends React.Component {
       activeCurrency: 'USD',
       activeCategory: 'all',
       categoriesNames: [],
+      isShowingCart: false,
     };
   }
 
@@ -45,6 +46,7 @@ class App extends React.Component {
           activeCategory={this.state.activeCategory}
           categoriesNames={this.state.categoriesNames}
         />
+
         <CategoryPage
           categoriesNames={this.state.categoriesNames}
           activeCategory={this.state.activeCategory}

@@ -8,3 +8,10 @@ h1 {
   margin: 0;
   text-transform: capitalize;
 }
+#products {
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
