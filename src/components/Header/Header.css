@@ -17,7 +17,7 @@ header > nav > ul {
   text-transform: uppercase;
 }
 
-ul {
+header ul {
   margin: 0px;
   padding: 0;
   display: flex;

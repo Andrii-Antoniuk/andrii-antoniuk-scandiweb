@@ -13,6 +13,15 @@ export class ProductCard extends React.Component {
           key={this.props.product.name}
           onMouseEnter={this.props.handleEnter}
           onMouseLeave={this.props.handleLeave}
+          onClick={(event) => {
+            if (
+              event.target.tagName !== 'circle' &&
+              event.target.tagName !== 'path'
+            ) {
+              this.props.pageChange();
+              this.props.productChange(this.props.product.id);
+            }
+          }}
         >
           <div className="image-card">
             <img
@@ -20,7 +29,9 @@ export class ProductCard extends React.Component {
               alt={this.props.product.name}
             />
           </div>
-          <span>{this.props.product.name}</span>
+          <span>
+            {this.props.product.brand} {this.props.product.name}
+          </span>
           <span>
             {Object.values(
               Object.values(

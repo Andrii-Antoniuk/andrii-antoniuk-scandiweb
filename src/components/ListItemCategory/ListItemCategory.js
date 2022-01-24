@@ -80,6 +80,7 @@ export class ListItemCategory extends React.Component {
                   onClick={(event) => {
                     this.props.catChange(event);
                     this.handleClick(event);
+                    this.props.pageChange();
                   }}
                   className={
                     element === this.props.activeCategory

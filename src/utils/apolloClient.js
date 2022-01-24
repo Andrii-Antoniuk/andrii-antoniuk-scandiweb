@@ -73,3 +73,72 @@ export const getCategoryProducts = async (categoryName) => {
 
   /* name: data.data.category.name, */
 };
+
+export const getProduct = async (id) => {
+  const data = await client
+    .query({
+      query: gql`
+      query {
+        product(id: "${id}") {
+          id
+          name
+          brand
+          inStock
+          gallery
+          description
+          category
+          attributes {
+            id
+            
+            type
+            items {
+              id, value
+            }
+          }
+          prices {
+            currency {
+              label
+              symbol
+            }
+            amount
+          }
+        }
+      }
+      
+    `,
+    })
+    .catch((err) => console.log(err));
+  return data.data.product;
+};
+export const getProductForCart = async (id) => {
+  const data = await client
+    .query({
+      query: gql`
+      query {
+        product(id: "${id}") {
+          id
+          name
+          brand
+          gallery
+          attributes {
+            id
+            type
+            items {
+              id, value
+            }
+          }
+          prices {
+            currency {
+              label
+              symbol
+            }
+            amount
+          }
+        }
+      }
+      
+    `,
+    })
+    .catch((err) => console.log(err));
+  return data.data.product;
+};

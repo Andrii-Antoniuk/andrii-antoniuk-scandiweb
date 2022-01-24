@@ -56,7 +56,7 @@ export class Actions extends React.Component {
             currencies={this.props.currencies}
           />
         </OutsideAlerter>
-        <CartIcon />
+        <CartIcon onClick={this.props.pageChange} />
       </div>
     );
   }

@@ -1,0 +1,76 @@
+.cart-info > h2 {
+  font-family: 'Raleway';
+  font-weight: 700;
+  font-size: 2rem;
+  text-transform: uppercase;
+  margin: 0;
+  margin-bottom: 3.75rem;
+}
+
+.cart-product {
+  font-family: 'Raleway';
+  padding: 1.25rem 0;
+  border-top: 1px solid#E5E5E5;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cart-product h3,
+.cart-product h4 {
+  font-size: 1.875rem;
+  margin: 0;
+  padding-bottom: 0.75rem;
+}
+
+.cart-product h3 {
+  font-weight: 600;
+  padding-bottom: 1rem;
+}
+
+.cart-product h4 {
+  font-weight: 400;
+}
+
+.cart-product span {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.cart-product .attributes {
+  margin-top: 0.75rem;
+}
+.product-info {
+  display: flex;
+  align-items: center;
+}
+
+.product-info svg {
+  cursor: pointer;
+}
+
+.product-info svg:hover {
+  background-color: black;
+}
+
+.product-info svg:hover .white {
+  stroke: white;
+}
+
+.counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.counter-value {
+  font-family: Raleway;
+  font-weight: 500;
+  padding: 55px 30px;
+  font-size: 1.5rem;
+}
+.product-attributes > .attributes {
+  margin-left: 0;
+}
+.product-attributes .attribute-value {
+  cursor: default;
+}

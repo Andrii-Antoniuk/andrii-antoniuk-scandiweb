@@ -47,6 +47,7 @@ export class Header extends React.Component {
           catChange={this.props.catChange}
           activeCategory={this.props.activeCategory}
           widths={this.state.categoriesWidths}
+          pageChange={() => this.props.pageChange('category')}
         />
 
         <Logo />
@@ -54,6 +55,7 @@ export class Header extends React.Component {
           currencies={this.state.currencyNames}
           curChange={this.props.curChange}
           activeCurrency={this.props.activeCurrency}
+          pageChange={() => this.props.pageChange('cart')}
         />
       </header>
     );

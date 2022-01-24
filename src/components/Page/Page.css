@@ -1,5 +1,6 @@
-#category-page {
+.page {
   padding: 5rem calc((20vw - 41px) / 2);
+  padding-bottom: 1rem;
 }
 
 h1 {

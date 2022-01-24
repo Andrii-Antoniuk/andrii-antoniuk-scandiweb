@@ -82,6 +82,11 @@
   transition: all 0.4s;
 }
 
+path,
+circle {
+  cursor: pointer;
+}
+
 .image-card {
   overflow: hidden;
   position: relative;
