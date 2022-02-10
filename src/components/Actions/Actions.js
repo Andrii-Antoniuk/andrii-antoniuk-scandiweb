@@ -1,63 +1,139 @@
 import React from 'react';
 import { ReactComponent as CartIcon } from '../../images/cart.svg';
-import getSymbolFromCurrency from 'currency-symbol-map';
-import './Actions.css';
-import { CurrencySwitch } from '../CurrencySwitch/CurrencySwitch';
+import CurrencySwitch from '../CurrencySwitch/CurrencySwitch';
+import { getCurrencies } from '../../features/currenciesSlice';
+import { changeActiveCurrency } from '../../features/activeSlice';
 import OutsideAlerter from '../OutsideHandler/OutsideHandler';
-export class Actions extends React.Component {
+import CartPopup from '../CartPopup/CartPopup';
+import { connect } from 'react-redux';
+import './Actions.css';
+import PopupWithTransition from '../PopupWithTransition/PopupWithTransition';
+
+class Actions extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isShowing: false,
+      isShowingCurrency: false,
+      isShowingCart: false,
       timer: null,
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleLeave = this.handleLeave.bind(this);
     this.cancelLeave = this.cancelLeave.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleClickOutsideCart = this.handleClickOutsideCart.bind(this);
+    this.handleClickCart = this.handleClickCart.bind(this);
   }
-  handleClick() {
-    this.setState((prevState) => ({ isShowing: !prevState.isShowing }));
+
+  handleClickCart() {
+    this.setState((prevState) => {
+      return { isShowingCart: prevState.isShowingCart ? false : true };
+    });
   }
+
   handleLeave() {
     this.setState({
       timer: setTimeout(
         function () {
-          this.setState({ isShowing: false });
+          this.setState({ isShowingCurrency: false });
         }.bind(this),
         3000
       ),
     });
   }
-  handleClickOutside() {
-    this.setState({ isShowing: false });
+
+  handleClickOutside(event) {
+    if (
+      event.target.nodeName !== 'HTML' &&
+      (event.target.parentElement.id === 'currency' ||
+        event.target.id === 'currency')
+    ) {
+      return;
+    }
+    this.setState({ isShowingCurrency: false });
+  }
+
+  handleClick() {
+    if (!this.state.isShowingCurrency) {
+      this.setState({ isShowingCurrency: true });
+    } else {
+      this.setState({ isShowingCurrency: false });
+    }
+  }
+
+  handleClickOutsideCart(event) {
+    if (
+      event.target.nodeName !== 'HTML' &&
+      (event.target.parentElement.id === 'cart-icon' ||
+        event.target.parentElement.nodeName === 'svg')
+    ) {
+      return;
+    }
+    this.setState({ isShowingCart: false });
   }
 
   cancelLeave() {
     clearTimeout(this.state.timer);
   }
 
+  componentDidMount() {
+    this.props
+      .dispatch(getCurrencies())
+      .then((result) =>
+        this.props.dispatch(changeActiveCurrency(result.payload[0]))
+      )
+      .catch((error) => {
+        console.log(`Something went wrong. Your backend is not working`);
+      });
+  }
+
   render() {
     return (
       <div className="dd-wrapper">
         <div id="currency" onClick={this.handleClick}>
-          <span>{getSymbolFromCurrency(this.props.activeCurrency)}</span>
+          <span id="currency-symbol">
+            {this.props.active.currency
+              ? this.props.active.currency.symbol.slice(-1)
+              : '...'}
+          </span>
           <div
             id="arrow"
-            className={this.state.isShowing ? 'reverse' : ''}
+            className={this.state.isShowingCurrency ? 'reverse' : ''}
           ></div>
         </div>
+
         <OutsideAlerter handleClickOutside={this.handleClickOutside}>
-          <CurrencySwitch
-            curChange={this.props.curChange}
-            mounted={this.state.isShowing}
+          <PopupWithTransition
+            mounted={this.state.isShowingCurrency}
             handleLeave={this.handleLeave}
             cancelLeave={this.cancelLeave}
-            currencies={this.props.currencies}
-          />
+          >
+            <CurrencySwitch currencies={this.props.currencies} />
+          </PopupWithTransition>
         </OutsideAlerter>
-        <CartIcon onClick={this.props.pageChange} />
+        <div id="cart-icon" onClick={this.handleClickCart}>
+          <CartIcon />
+          {Object.keys(this.props.cart).length === 0 ? null : (
+            <div id="item-counter">{Object.keys(this.props.cart).length}</div>
+          )}
+        </div>
+        <OutsideAlerter handleClickOutside={this.handleClickOutsideCart}>
+          <PopupWithTransition mounted={this.state.isShowingCart}>
+            <CartPopup handleClickCart={this.handleClickCart} />
+          </PopupWithTransition>
+        </OutsideAlerter>
       </div>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  const { active, currencies, cart } = state;
+  return {
+    active: active.active,
+    currencies: currencies.currencies,
+    cart: cart.cart,
+  };
+};
+
+export default connect(mapStateToProps)(Actions);

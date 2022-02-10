@@ -4,13 +4,20 @@ import { changeActivePage } from '../../features/activeSlice';
 import { toCamelCase } from '../../utils/toCamelCase';
 import { ReactComponent as Plus } from '../../images/plus.svg';
 import { ReactComponent as Minus } from '../../images/minus.svg';
-import { changeCount } from '../../features/cartSlice';
+import { changeCount, deleteProduct } from '../../features/cartSlice';
 import handleButtonAnimation from '../../utils/handleButtonAnimation';
+import OutsideAlerter from '../OutsideHandler/OutsideHandler';
+import PopupWithTransition from '../PopupWithTransition/PopupWithTransition';
+import DeleteItem from '../DeleteItem/DeleteItem';
 
 class CartPopup extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { total: 0 };
+
+    this.state = { total: 0, showDelete: false, style: {}, idToDelete: null };
+    this.showDelete = this.showDelete.bind(this);
+    this.cancelDelete = this.cancelDelete.bind(this);
+    this.confirmDelete = this.confirmDelete.bind(this);
   }
 
   componentDidMount() {
@@ -39,6 +46,30 @@ class CartPopup extends React.Component {
         ).amount * this.props.products[myProduct].count;
     }
     this.setState({ total: total.toFixed(2) });
+  }
+
+  showDelete(event, id) {
+    const child = event.currentTarget.getBoundingClientRect();
+    const parent = document
+      .getElementById('cart-popup')
+      .getBoundingClientRect();
+    let style = {
+      top: `${(child.top - parent.top + 30).toFixed(0)}px`,
+      left: `${(child.left - parent.left - 50).toFixed(0)}px`,
+    };
+    this.setState({ showDelete: true, style, idToDelete: id });
+  }
+
+  cancelDelete(event) {
+    if (event.target.nodeName === 'svg' || event.target.parentNode === 'svg') {
+      return;
+    }
+    this.setState({ showDelete: false, style: {}, idToDelete: null });
+  }
+
+  confirmDelete() {
+    this.props.dispatch(deleteProduct({ id: this.state.idToDelete }));
+    this.setState({ showDelete: false, style: {}, idToDelete: null });
   }
 
   render() {
@@ -130,11 +161,14 @@ class CartPopup extends React.Component {
 
                   <Minus
                     className="minus"
-                    onClick={() => {
+                    onClick={(event) => {
                       if (myProduct.count > 0)
-                        this.props.dispatch(
-                          changeCount({ id: myProduct.id, change: -1 })
-                        );
+                        if (myProduct.count === 1) {
+                          this.showDelete(event, myProduct.id);
+                        } else
+                          this.props.dispatch(
+                            changeCount({ id: myProduct.id, change: -1 })
+                          );
                     }}
                   />
                 </div>
@@ -145,33 +179,52 @@ class CartPopup extends React.Component {
             </div>
           );
         })}
-        <div id="total">
-          <span> Total</span>
-          <span>
-            {this.props.active.currency.symbol}
-            {this.state.total}
-          </span>
-        </div>
-        <div className="buttons ">
-          <button
-            className="transparent"
-            onClick={(event) => {
-              handleButtonAnimation(event);
-              this.props.dispatch(changeActivePage('cart'));
-              this.props.handleClickCart();
-            }}
-          >
-            view bag
-          </button>
-          <button
-            className="green"
-            onClick={(event) => {
-              handleButtonAnimation(event);
-            }}
-          >
-            check out
-          </button>
-        </div>
+        {Object.keys(this.props.products).length !== 0 ? (
+          <>
+            <div id="total">
+              <span> Total</span>
+              <span>
+                {this.props.active.currency.symbol}
+                {this.state.total}
+              </span>
+            </div>
+            <div className="buttons ">
+              <button
+                className="transparent"
+                onClick={(event) => {
+                  handleButtonAnimation(event);
+                  this.props.dispatch(changeActivePage('cart'));
+                  this.props.handleClickCart();
+                }}
+              >
+                view bag
+              </button>
+              <button
+                className="green"
+                onClick={(event) => {
+                  handleButtonAnimation(event);
+                }}
+              >
+                check out
+              </button>
+            </div>
+          </>
+        ) : (
+          <div id="total">
+            <span>
+              <i> Your cart is empty</i>
+            </span>
+          </div>
+        )}
+        <OutsideAlerter handleClickOutside={this.cancelDelete}>
+          <PopupWithTransition mounted={this.state.showDelete}>
+            <DeleteItem
+              style={this.state.style}
+              cancelDelete={this.cancelDelete}
+              confirmDelete={this.confirmDelete}
+            />
+          </PopupWithTransition>
+        </OutsideAlerter>
       </div>
     );
   }

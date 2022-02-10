@@ -5,6 +5,7 @@
   width: 10%;
   max-height: 80vh;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .gallery-image {

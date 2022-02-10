@@ -1,3 +1,7 @@
+.cart {
+  position: relative;
+}
+
 .cart-info > h2 {
   font-family: 'Raleway';
   font-weight: 700;
@@ -96,4 +100,14 @@
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+.product-gallery svg {
+  position: absolute;
+  z-index: 20;
+  top: 50%;
+}
+
+.product-gallery svg:last-child {
+  right: 0;
 }

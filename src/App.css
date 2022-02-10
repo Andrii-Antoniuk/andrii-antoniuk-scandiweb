@@ -22,6 +22,7 @@
   user-select: none;
   max-height: 60vh;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 #cart-popup button {
@@ -129,6 +130,23 @@
 }
 #total span:last-child {
   font-weight: 700;
+}
+
+.confirm-delete.popup {
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  top: -1000px;
+}
+
+.confirm-delete .buttons {
+  padding: 0;
+  margin: 0;
+  width: 170px;
+}
+
+.confirm-delete button {
+  padding: 0.5rem;
 }
 
 /* 
