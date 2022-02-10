@@ -32,7 +32,7 @@ export default class OutsideAlerter extends React.Component {
    */
   handleClickOutside(event) {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      this.props.handleClickOutside();
+      this.props.handleClickOutside(event);
     }
   }
 

@@ -5,7 +5,7 @@ export const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export const getCategoryNames = async () => {
+export const queryCategories = async () => {
   const data = await client.query({
     query: gql`
       query {
@@ -18,25 +18,25 @@ export const getCategoryNames = async () => {
   return data.data.categories.map((objectElement) => objectElement.name);
 };
 
-export const getCurrencyNames = async () => {
+export const queryCurrencies = async () => {
   const data = await client.query({
     query: gql`
       query {
         currencies {
           label
+          symbol
         }
       }
     `,
   });
-  return data.data.currencies.map((objectElement) => objectElement.label);
+  return data.data.currencies;
 };
 
-export const getCategoryProducts = async (categoryName) => {
-  const data = await client
-    .query({
-      query: gql`
+export const queryProducts = async (categoryName) => {
+  const data = await client.query({
+    query: gql`
       query {
-        category(input: { title: "${categoryName}" }) {
+        category(input: { title: "all" }) {
           name
           products {
             id
@@ -54,6 +54,8 @@ export const getCategoryProducts = async (categoryName) => {
                 value
                 id
               }
+              # Disable Apollo caching for this AttributeSet
+              __typename @skip(if: true)
             }
             prices {
               currency {
@@ -67,17 +69,15 @@ export const getCategoryProducts = async (categoryName) => {
         }
       }
     `,
-    })
-    .catch((err) => console.log(err));
+  });
   return data.data.category.products;
 
   /* name: data.data.category.name, */
 };
 
-export const getProduct = async (id) => {
-  const data = await client
-    .query({
-      query: gql`
+export const queryProduct = async (id) => {
+  const data = await client.query({
+    query: gql`
       query {
         product(id: "${id}") {
           id
@@ -89,11 +89,12 @@ export const getProduct = async (id) => {
           category
           attributes {
             id
-            
             type
             items {
               id, value
             }
+            # Disable Apollo caching for this Color
+            __typename @skip(if: true)
           }
           prices {
             currency {
@@ -106,14 +107,13 @@ export const getProduct = async (id) => {
       }
       
     `,
-    })
-    .catch((err) => console.log(err));
+  });
+
   return data.data.product;
 };
 export const getProductForCart = async (id) => {
-  const data = await client
-    .query({
-      query: gql`
+  const data = await client.query({
+    query: gql`
       query {
         product(id: "${id}") {
           id
@@ -138,7 +138,6 @@ export const getProductForCart = async (id) => {
       }
       
     `,
-    })
-    .catch((err) => console.log(err));
+  });
   return data.data.product;
 };

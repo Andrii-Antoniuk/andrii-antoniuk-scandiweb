@@ -36,16 +36,21 @@
 #arrow.reverse {
   transform: rotate(0.625turn);
 }
+
+.popup {
+  z-index: 20;
+  background-color: #fff;
+  box-shadow: 0 0 20px #e0e0e0;
+  top: 65px;
+}
+
 #switch {
   position: absolute;
-  top: 65px;
   right: -29px;
   /*  29px is margin+length of currency 
   https://philipwalton.com/articles/what-no-one-told-you-about-z-index/ 
   this was really helpful here
   */
-  background-color: #fff;
-  box-shadow: 0 0 20px #e0e0e0;
 }
 #switch ul {
   display: flex;

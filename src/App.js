@@ -3,6 +3,9 @@ import { Header } from './components/Header/Header';
 import './App.css';
 import { Page } from './components/Page/Page';
 import { getCategoryNames } from './utils/apolloClient';
+import TestComponentRedux from './components/TestComponentRedux';
+import Appcopy from './Appcopy';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -152,6 +155,8 @@ class App extends React.Component {
           countChange={this.handleProductCountChange}
           cartProducts={this.state.cartProducts}
         />
+        <TestComponentRedux />
+        <Appcopy />
       </>
     );
   }

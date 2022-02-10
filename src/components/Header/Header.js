@@ -2,7 +2,7 @@ import React from 'react';
 import { ReactComponent as Logo } from '../../images/logo.svg';
 import { Actions } from '../Actions/Actions';
 import { ListItemCategory } from '../ListItemCategory/ListItemCategory';
-import { getCurrencyNames } from '../../utils/apolloClient';
+import { queryCurrencies } from '../../utils/apolloClient';
 import './Header.css';
 
 export class Header extends React.Component {
@@ -15,7 +15,7 @@ export class Header extends React.Component {
     };
   }
   componentDidMount() {
-    getCurrencyNames().then((result) =>
+    queryCurrencies().then((result) =>
       this.setState({ currencyNames: result })
     );
   }

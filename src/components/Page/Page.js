@@ -1,5 +1,5 @@
 import React from 'react';
-import { getCategoryProducts } from '../../utils/apolloClient';
+import { queryProducts } from '../../utils/apolloClient';
 import { CartPage } from '../CartPage/CartPage';
 import { CategoryPage } from '../CategoryPage/CategoryPage';
 import { ProductPage } from '../ProductPage/ProductPage';
@@ -19,7 +19,7 @@ export class Page extends React.Component {
     const categories = this.props.categoriesNames;
 
     for (let i = 1; i < categories.length; i++) {
-      getCategoryProducts(categories[i]).then((result) =>
+      queryProducts(categories[i]).then((result) =>
         this.setState({
           products: [...this.state.products, result],
         })
@@ -35,7 +35,7 @@ export class Page extends React.Component {
       const categories = this.props.categoriesNames;
 
       for (let i = 1; i < categories.length; i++) {
-        getCategoryProducts(categories[i]).then((result) =>
+        queryProducts(categories[i]).then((result) =>
           this.setState({
             products: [...this.state.products, result],
           })

@@ -1,37 +1,32 @@
 import React from 'react';
-import { getProduct } from '../../utils/apolloClient';
 import './ProductPage.css';
 import parse from 'html-react-parser';
 import { toCamelCase } from '../../utils/toCamelCase';
-export class ProductPage extends React.Component {
+import { connect, shallowEqual } from 'react-redux';
+import { getProduct } from '../../features/productsSlice';
+import { addProductToCart, changeCount } from '../../features/cartSlice';
+import handleButtonAnimation from '../../utils/handleButtonAnimation';
+class ProductPage extends React.Component {
   constructor(props) {
     super(props);
     this.handleActiveImageChange = this.handleActiveImageChange.bind(this);
+    this.handleAttributeChange = this.handleAttributeChange.bind(this);
     this.state = {
-      product: {},
       activeImage: '',
       activeAttributes: {},
     };
   }
   componentDidMount() {
-    getProduct(this.props.activeProduct).then((result) =>
-      this.setState(
-        {
-          product: result,
-          activeImage: result.gallery[0],
-        },
-        () => {
-          this.state.product.attributes.forEach((attribute) => {
-            this.setState((prevState) => ({
-              activeAttributes: {
-                ...prevState.activeAttributes,
-                [toCamelCase(attribute.id)]: '',
-              },
-            }));
-          });
-        }
-      )
-    );
+    this.props.dispatch(getProduct(this.props.active.productId)).then(() => {
+      const activeAttributes = {};
+      for (let attribute of this.props.product.attributes) {
+        activeAttributes[toCamelCase(attribute.id)] = '';
+      }
+      this.setState({
+        activeImage: this.props.product.gallery[0],
+        activeAttributes,
+      });
+    });
     window.scrollTo(0, 0);
   }
 
@@ -49,36 +44,39 @@ export class ProductPage extends React.Component {
   }
 
   render() {
-    return Object.keys(this.state.product).length !== 0 ? (
+    return Object.keys(this.props.product).length !== 0 ? (
       <div className="page">
         <div className="product">
           <div className="gallery">
-            {this.state.product.gallery.map((imageUrl) => (
+            {this.props.product.gallery.map((imageUrl) => (
               <div className="gallery-image" key={imageUrl}>
                 <img
                   src={imageUrl}
-                  alt={this.state.product.name}
+                  alt={this.props.product.name}
                   onClick={this.handleActiveImageChange}
                 />
               </div>
             ))}
           </div>
           <div className="image">
-            <img src={this.state.activeImage} alt={this.state.product.name} />
+            <img src={this.state.activeImage} alt={this.props.product.name} />
           </div>
           <div className="info">
-            <h2 className="brand">{this.state.product.brand}</h2>
-            <h3 className="product-name">{this.state.product.name}</h3>
+            <h2 className="brand">{this.props.product.brand}</h2>
+            <h3 className="product-name">{this.props.product.name}</h3>
 
-            {this.state.product.attributes.map((attribute) => (
-              <div key={attribute.id} className="attributes">
+            {this.props.product.attributes.map((attribute) => (
+              <div
+                key={attribute.id + this.props.product.id}
+                className="attributes"
+              >
                 {attribute.id}:
                 <div className="attribute">
                   {attribute.type === 'swatch'
                     ? attribute.items.map((item) => {
                         return (
                           <div
-                            key={item.id}
+                            key={item.id + this.props.product.id}
                             className={`attribute-value swatch ${
                               this.state.activeAttributes[
                                 toCamelCase(attribute.id)
@@ -88,29 +86,33 @@ export class ProductPage extends React.Component {
                             } `}
                             style={{ backgroundColor: item.value }}
                             title={item.id}
-                            onClick={() =>
-                              this.handleAttributeChange(attribute.id, item.id)
-                            }
+                            onClick={(event) => {
+                              handleButtonAnimation(event);
+                              this.handleAttributeChange(attribute.id, item.id);
+                            }}
                           ></div>
                         );
                       })
-                    : attribute.items.map((item) => (
-                        <div
-                          key={item.id}
-                          className={`attribute-value${
-                            this.state.activeAttributes[
-                              toCamelCase(attribute.id)
-                            ] === item.id
-                              ? ' active'
-                              : ''
-                          } `}
-                          onClick={() =>
-                            this.handleAttributeChange(attribute.id, item.id)
-                          }
-                        >
-                          {item.value}
-                        </div>
-                      ))}
+                    : attribute.items.map((item) => {
+                        return (
+                          <div
+                            key={item.id + this.props.product.id}
+                            className={`attribute-value${
+                              this.state.activeAttributes[
+                                toCamelCase(attribute.id)
+                              ] === item.id
+                                ? ' active'
+                                : ''
+                            } `}
+                            onClick={(event) => {
+                              handleButtonAnimation(event);
+                              this.handleAttributeChange(attribute.id, item.id);
+                            }}
+                          >
+                            {item.value}
+                          </div>
+                        );
+                      })}
                 </div>
               </div>
             ))}
@@ -118,9 +120,10 @@ export class ProductPage extends React.Component {
             <div className="price-value">
               {Object.values(
                 Object.values(
-                  this.state.product.prices.filter(
+                  this.props.product.prices.filter(
                     (elementObj) =>
-                      elementObj.currency.label === this.props.activeCurrency
+                      elementObj.currency.label ===
+                      this.props.active.currency.label
                   )[0]
                 )
                   .slice(-2)
@@ -132,21 +135,47 @@ export class ProductPage extends React.Component {
                   })
               )}
             </div>
-            {this.state.product.inStock ? (
+            {this.props.product.inStock ? (
               <button
-                className="add"
-                onClick={() => {
+                className="green"
+                onClick={(event) => {
                   if (
                     Object.values(this.state.activeAttributes).some(
                       (element) => element === ''
                     )
                   ) {
-                    alert('You should choose all of the attributes');
-                  } else
-                    this.props.countChange(
-                      this.state.product.id,
-                      this.state.activeAttributes
+                    Array.from(
+                      document.querySelectorAll('.attribute-value')
+                    ).forEach((element) =>
+                      handleButtonAnimation(
+                        { currentTarget: element },
+                        'shadow-drop-2-center-warning'
+                      )
                     );
+                  } else {
+                    const sameProduct = Object.values(
+                      this.props.cartProducts
+                    ).find(
+                      (cartProduct) =>
+                        cartProduct.product.name === this.props.product.name &&
+                        shallowEqual(
+                          cartProduct.attributes,
+                          this.state.activeAttributes
+                        )
+                    );
+                    if (sameProduct) {
+                      this.props.dispatch(
+                        changeCount({ id: sameProduct.id, change: 1 })
+                      );
+                    } else
+                      this.props.dispatch(
+                        addProductToCart({
+                          product: this.props.product,
+                          attributes: this.state.activeAttributes,
+                        })
+                      );
+                    handleButtonAnimation(event);
+                  }
                 }}
               >
                 add to cart
@@ -155,7 +184,7 @@ export class ProductPage extends React.Component {
               <button className="not-availble">out of stock</button>
             )}
             <div className="description">
-              {parse(this.state.product.description)}
+              {parse(this.props.product.description)}
             </div>
           </div>
         </div>
@@ -165,3 +194,14 @@ export class ProductPage extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  const { active, products, cart } = state;
+  return {
+    active: active.active,
+    product: products.product,
+    cartProducts: cart.cart,
+  };
+};
+
+export default connect(mapStateToProps)(ProductPage);
