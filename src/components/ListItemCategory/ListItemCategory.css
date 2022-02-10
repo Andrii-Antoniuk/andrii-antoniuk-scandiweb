@@ -19,7 +19,7 @@ nav > ul > div {
   position: absolute;
   bottom: 0px;
   height: 2px;
-  width: 100px;
+  width: 0px;
   background-color: #5ece7b;
   border-radius: 2px;
   transition: 0.35s ease-in-out;

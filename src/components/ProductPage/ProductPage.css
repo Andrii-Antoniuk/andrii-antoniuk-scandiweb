@@ -5,10 +5,7 @@
   width: 10%;
   max-height: 80vh;
   overflow-y: scroll;
-}
-
-.gallery::-webkit-scrollbar {
-  width: 0%;
+  overflow-x: hidden;
 }
 
 .gallery-image {
@@ -115,20 +112,40 @@
 }
 
 .not-availble,
-.add {
+.green,
+.transparent {
   text-transform: uppercase;
   padding: 1rem;
   width: 100%;
   border: none;
 }
 
-.add {
+.green {
   background-color: #5ece7b;
   color: white;
   cursor: pointer;
+  border: 1px solid #5ece7b;
+  transition: all 0.4s;
 }
+
+.green:hover {
+  color: #000;
+}
+
 .not-availble {
   color: #8d8f9a;
+}
+
+.transparent {
+  cursor: pointer;
+  background-color: transparent;
+  color: #1d1f22;
+  border: 1px solid #1d1f22;
+}
+
+.transparent:hover {
+  background-color: #1d1f22;
+  color: white;
 }
 
 .info {
