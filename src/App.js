@@ -12,13 +12,16 @@ class App extends React.Component {
     return (
       <>
         <Header />
-        {this.props.active.page === '' || this.props.active.page === 'plp' ? (
-          <CategoryPage />
-        ) : this.props.active.page === 'pdp' ? (
-          <ProductPage />
-        ) : (
-          <CartPage />
-        )}
+        <div className="container">
+          {/* added this div to have compatibility with Firefox*/}
+          {this.props.active.page === '' || this.props.active.page === 'plp' ? (
+            <CategoryPage />
+          ) : this.props.active.page === 'pdp' ? (
+            <ProductPage />
+          ) : (
+            <CartPage />
+          )}
+        </div>
       </>
     );
   }

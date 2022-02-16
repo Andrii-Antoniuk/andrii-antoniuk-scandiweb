@@ -39,26 +39,28 @@ class ProductCard extends React.Component {
           <span>
             {this.props.product.brand} {this.props.product.name}
           </span>
-          <span>
-            {Object.values(
-              Object.values(this.props.product.prices).filter(
-                (elementObj) =>
-                  elementObj.currency.label === this.props.active.currency.label
-              )[0]
-            )
-              .slice(-2)
-              .map((element) => {
-                if (typeof element === 'number' && isFinite(element)) {
-                  return element;
-                }
-                return element.symbol;
-              })}
-          </span>
+          {this.props.product && (
+            <span>
+              {Object.values(
+                Object.values(this.props.product.prices).filter(
+                  (elementObj) =>
+                    elementObj.currency.label ===
+                    this.props.active.currency.label
+                )[0]
+              )
+                .slice(-2)
+                .map((element) => {
+                  if (typeof element === 'number' && isFinite(element)) {
+                    return element;
+                  }
+                  return element.symbol;
+                })}
+            </span>
+          )}
           {!this.props.product.inStock ? (
             <div>Out of stock</div>
           ) : this.props.whichHovered === this.props.product.id ? (
             <CartClick
-              style={{ opacity: 1 }}
               onClick={() => {
                 let myAttributes = {};
                 const attributesKeys = this.props.product.attributes.map(
@@ -88,7 +90,7 @@ class ProductCard extends React.Component {
               }}
             />
           ) : (
-            <CartClick style={{ opacity: 0 }} />
+            <CartClick />
           )}
         </div>
       )

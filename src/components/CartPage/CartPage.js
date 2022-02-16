@@ -3,7 +3,6 @@ import { ReactComponent as Plus } from '../../images/plus.svg';
 import { ReactComponent as Minus } from '../../images/minus.svg';
 import { ReactComponent as ArrowLeft } from '../../images/arrowLeft.svg';
 import { ReactComponent as ArrowRight } from '../../images/arrowRight.svg';
-
 import { toCamelCase } from '../../utils/toCamelCase';
 import './CartPage.css';
 import { connect } from 'react-redux';
@@ -43,6 +42,7 @@ class CartPage extends React.Component {
         i: 0,
         hide: this.props.products[myProduct].product.gallery.length - 1 === 0,
       };
+      console.log(galleries[myProduct].hide);
     }
 
     this.setState({ total: total.toFixed(2), galleriesLengths: galleries });
@@ -75,15 +75,14 @@ class CartPage extends React.Component {
     const child = event.currentTarget.getBoundingClientRect();
     const parent = document.querySelector('.cart').getBoundingClientRect();
     let style = {
-      /*  top: 'unset', */
-      top: `${(child.top - parent.top - 30).toFixed(0)}px`,
-      left: `${(child.left - parent.left).toFixed(0)}px`,
+      top: `${(child.top - parent.top - 35).toFixed(0)}px`,
+      left: `${(child.left - parent.left - 50).toFixed(0)}px`,
     };
     this.setState({ showDelete: true, style, idToDelete: id });
   }
 
   cancelDelete(event) {
-    if (event.target.nodeName === 'svg' || event.target.parentNode === 'svg') {
+    if (event.target.classList[0] === 'minus') {
       return;
     }
     this.setState({ showDelete: false, style: {}, idToDelete: null });
@@ -119,9 +118,7 @@ class CartPage extends React.Component {
           <div className="cart-info">
             <h2>Cart</h2>
             {Object.keys(this.props.products).length === 0 ? (
-              <h1 style={{ textAlign: 'center' }}>
-                You don't have anything in your cart =(
-              </h1>
+              <h1>You don't have anything in your cart =(</h1>
             ) : (
               Object.values(this.props.products).map((myProduct) => {
                 const product = myProduct.product;
@@ -169,7 +166,9 @@ class CartPage extends React.Component {
                                           ? ' active'
                                           : ''
                                       }`}
-                                      style={{ backgroundColor: item.value }}
+                                      style={{
+                                        backgroundColor: item.value,
+                                      }}
                                       title={item.id}
                                     ></div>
                                   );
@@ -256,6 +255,14 @@ class CartPage extends React.Component {
                 );
               })
             )}
+            <div className="total">
+              <span> </span>
+              <h3>
+                Total: &nbsp;
+                {this.props.active.currency.symbol}
+                {this.state.total}
+              </h3>
+            </div>
           </div>
           <OutsideAlerter handleClickOutside={this.cancelDelete}>
             <PopupWithTransition mounted={this.state.showDelete}>

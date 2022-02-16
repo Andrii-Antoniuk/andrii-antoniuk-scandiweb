@@ -29,6 +29,7 @@ class Actions extends React.Component {
     this.setState((prevState) => {
       return { isShowingCart: prevState.isShowingCart ? false : true };
     });
+    document.querySelector('.container').classList.toggle('backdrop');
   }
 
   handleLeave() {
@@ -70,6 +71,7 @@ class Actions extends React.Component {
       return;
     }
     this.setState({ isShowingCart: false });
+    document.querySelector('.container').classList.remove('backdrop');
   }
 
   cancelLeave() {
@@ -108,13 +110,22 @@ class Actions extends React.Component {
             handleLeave={this.handleLeave}
             cancelLeave={this.cancelLeave}
           >
-            <CurrencySwitch currencies={this.props.currencies} />
+            <CurrencySwitch
+              currencies={this.props.currencies}
+              handleClick={this.handleClick}
+            />
           </PopupWithTransition>
         </OutsideAlerter>
         <div id="cart-icon" onClick={this.handleClickCart}>
           <CartIcon />
           {Object.keys(this.props.cart).length === 0 ? null : (
-            <div id="item-counter">{Object.keys(this.props.cart).length}</div>
+            <div id="item-counter">
+              {Object.values(this.props.cart)
+                .map((product) => product.count)
+                .reduce((prevValue, currValue) => {
+                  return prevValue + currValue;
+                }, 0)}
+            </div>
           )}
         </div>
         <OutsideAlerter handleClickOutside={this.handleClickOutsideCart}>

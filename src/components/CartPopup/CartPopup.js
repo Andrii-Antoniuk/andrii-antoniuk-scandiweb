@@ -50,18 +50,19 @@ class CartPopup extends React.Component {
 
   showDelete(event, id) {
     const child = event.currentTarget.getBoundingClientRect();
+    const scrollTop = document.getElementById('cart-popup').scrollTop;
     const parent = document
       .getElementById('cart-popup')
       .getBoundingClientRect();
     let style = {
-      top: `${(child.top - parent.top + 30).toFixed(0)}px`,
+      top: `${(scrollTop + child.top - parent.top - 35).toFixed(0)}px`,
       left: `${(child.left - parent.left - 50).toFixed(0)}px`,
     };
     this.setState({ showDelete: true, style, idToDelete: id });
   }
 
   cancelDelete(event) {
-    if (event.target.nodeName === 'svg' || event.target.parentNode === 'svg') {
+    if (event.target.classList[0] === 'minus') {
       return;
     }
     this.setState({ showDelete: false, style: {}, idToDelete: null });
@@ -77,8 +78,19 @@ class CartPopup extends React.Component {
       <div id="cart-popup" className="popup">
         <span>
           <b>My Bag,</b>
-          {` ${Object.keys(this.props.products).length} item${
-            Object.keys(this.props.products).length === 1 ? '' : 's'
+          {` ${Object.values(this.props.products)
+            .map((product) => product.count)
+            .reduce((prevValue, currValue) => {
+              return prevValue + currValue;
+            }, 0)} item${
+            Object.values(this.props.products).length !== 0
+              ? !(
+                  Object.values(this.props.products)[0].count > 1 ||
+                  Object.values(this.props.products).length > 1
+                )
+                ? ''
+                : 's'
+              : 's'
           }`}
         </span>
         {Object.values(this.props.products).map((myProduct) => {
@@ -181,7 +193,7 @@ class CartPopup extends React.Component {
         })}
         {Object.keys(this.props.products).length !== 0 ? (
           <>
-            <div id="total">
+            <div className="total">
               <span> Total</span>
               <span>
                 {this.props.active.currency.symbol}
@@ -210,7 +222,7 @@ class CartPopup extends React.Component {
             </div>
           </>
         ) : (
-          <div id="total">
+          <div className="total">
             <span>
               <i> Your cart is empty</i>
             </span>

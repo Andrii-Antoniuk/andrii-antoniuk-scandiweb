@@ -1,15 +1,30 @@
-* ::-webkit-scrollbar {
+html ::-webkit-scrollbar {
   width: 7px;
 }
-* ::-webkit-scrollbar-track {
+html ::-webkit-scrollbar-track {
   background: #f3f3f3;
 }
-*::-webkit-scrollbar-thumb {
+html ::-webkit-scrollbar-thumb {
   background-color: #a6a6a6;
   border-radius: 0.2rem;
 }
-*::-webkit-scrollbar-thumb:hover {
+html ::-webkit-scrollbar-thumb:hover {
   background-color: #1d1f22;
+}
+
+img {
+  user-select: none;
+}
+
+.backdrop {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.backdrop .page img,
+.backdrop .page svg,
+.backdrop .page .swatch,
+.backdrop .page button {
+  filter: brightness(0.75);
 }
 
 #cart-popup {
@@ -19,14 +34,22 @@
   font-family: 'Raleway';
   font-weight: 500;
   width: calc((100vw - 41px) / 4);
-  user-select: none;
   max-height: 60vh;
-  overflow-y: scroll;
   overflow-x: hidden;
+  top: 32.5px;
 }
 
 #cart-popup button {
   width: 48%;
+}
+
+#cart-popup > div > .popup,
+.cart > div > .popup {
+  position: initial !important;
+}
+
+.cart h1 {
+  text-align: 'center';
 }
 
 .buttons {
@@ -82,11 +105,13 @@
   font-size: 12px;
 }
 
-.mini.active.attribute-value {
+/* .mini.active.attribute-value {
   border-color: #a6a6a6;
   color: #a6a6a6;
   background-color: rgba(166, 166, 166, 0.2);
-}
+} 
+In Figma design that was be just like that, but O'k =)
+*/
 
 .mini-price {
   font-size: 1rem;
@@ -105,9 +130,9 @@
 
 .plus,
 .minus {
-  position: relative;
   height: 22.5px;
   width: 22.5px;
+  position: relative;
 }
 
 .counter-value {
@@ -119,16 +144,16 @@
   justify-content: space-between !important;
   height: 100%;
 }
-#total {
+.total {
   margin: 2rem 0;
   display: flex;
   justify-content: space-between;
 }
-#total span:first-child {
+.total span:first-child {
   font-family: Roboto;
   font-weight: 500;
 }
-#total span:last-child {
+.total span:last-child {
   font-weight: 700;
 }
 
@@ -147,6 +172,11 @@
 
 .confirm-delete button {
   padding: 0.5rem;
+}
+
+header > svg path,
+circle {
+  cursor: auto;
 }
 
 /* 

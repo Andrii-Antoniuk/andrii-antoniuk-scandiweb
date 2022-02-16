@@ -9,7 +9,7 @@ class PopupWithTransition extends React.Component {
     this.state = {
       style: {
         opacity: 0,
-        transition: 'all .5s ease',
+        transition: 'opacity .5s ease',
       },
       show: false,
     };
@@ -30,7 +30,7 @@ class PopupWithTransition extends React.Component {
     this.setState({
       style: {
         opacity: 0,
-        transition: 'all .5s ease',
+        transition: 'opacity .5s ease',
       },
     });
   }
@@ -40,7 +40,7 @@ class PopupWithTransition extends React.Component {
     this.setState({
       style: {
         opacity: 1,
-        transition: 'all .5s ease',
+        transition: 'opacity .5s ease',
       },
     });
   }

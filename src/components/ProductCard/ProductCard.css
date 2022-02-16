@@ -9,6 +9,14 @@
   transition: all 0.3s ease-in-out;
 }
 
+.product-card svg {
+  opacity: 0;
+}
+
+.product-card:hover svg {
+  opacity: 1;
+}
+
 .product-card::after {
   content: '';
   position: absolute;

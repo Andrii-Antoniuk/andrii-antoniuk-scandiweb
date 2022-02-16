@@ -16,7 +16,7 @@
   cursor: pointer;
 }
 
-#currency > span {
+#currency span {
   display: inline-block;
   width: 10px;
 }
@@ -41,7 +41,7 @@
   z-index: 20;
   background-color: #fff;
   box-shadow: 0 0 20px #e0e0e0;
-  top: 65px;
+  position: relative;
 }
 
 #switch {
@@ -51,6 +51,8 @@
   https://philipwalton.com/articles/what-no-one-told-you-about-z-index/ 
   this was really helpful here
   */
+  top: 32.5px;
+  width: max-content;
 }
 #switch ul {
   display: flex;
@@ -63,7 +65,7 @@
 #switch span {
   display: inline-block;
   cursor: pointer;
-  padding: 0 40px 0 20px;
+  padding: 0 30px 0 20px;
 }
 #switch li:last-child {
   padding-bottom: 20px;

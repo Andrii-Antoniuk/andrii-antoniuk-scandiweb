@@ -11,9 +11,10 @@ class CurrencySwitch extends React.Component {
             {this.props.currencies.map((element) => (
               <li
                 key={element.label}
-                onClick={() =>
-                  this.props.dispatch(changeActiveCurrency(element))
-                }
+                onClick={() => {
+                  this.props.dispatch(changeActiveCurrency(element));
+                  this.props.handleClick();
+                }}
               >
                 <span>
                   {element.symbol.slice(-1)} {element.label}
