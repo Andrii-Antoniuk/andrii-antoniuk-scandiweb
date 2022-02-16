@@ -4,7 +4,7 @@ export default class Price extends React.Component {
   render() {
     return Object.values(
       Object.values(
-        this.props.product.prices.filter((elementObj) => {
+        this.props.prices.filter((elementObj) => {
           return elementObj.currency.label === this.props.currency.label;
         })[0]
       )

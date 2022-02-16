@@ -114,11 +114,14 @@ class CartPage extends PureCart {
                   <h4>{product.name}</h4>
                   <span>
                     <Price
-                      product={product}
+                      prices={product.prices}
                       currency={this.props.active.currency}
                     />
                   </span>
-                  <Attributes attributes={attributes} product={product} />
+                  <Attributes
+                    attributes={attributes}
+                    productAttributes={product.attributes}
+                  />
                 </div>
                 <div className="product-info">
                   <Counter myProduct={myProduct} showDelete={this.showDelete} />

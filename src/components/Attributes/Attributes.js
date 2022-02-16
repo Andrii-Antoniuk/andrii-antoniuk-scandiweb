@@ -3,7 +3,7 @@ import { toCamelCase } from '../../utils/toCamelCase';
 
 export default class Attributes extends React.Component {
   render() {
-    return this.props.product.attributes.map((attribute) => (
+    return this.props.productAttributes.map((attribute) => (
       <div key={attribute.id} className="attributes">
         <div className="attribute">
           {attribute.type === 'swatch'

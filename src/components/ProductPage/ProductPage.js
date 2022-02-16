@@ -6,6 +6,7 @@ import { connect, shallowEqual } from 'react-redux';
 import { getProduct } from '../../features/productsSlice';
 import { addProductToCart, changeCount } from '../../features/cartSlice';
 import handleButtonAnimation from '../../utils/handleButtonAnimation';
+import Price from '../Price/Price';
 class ProductPage extends React.Component {
   constructor(props) {
     super(props);
@@ -43,6 +44,103 @@ class ProductPage extends React.Component {
     });
   }
 
+  renderAttributesButtons() {
+    return this.props.product.attributes.map((attribute) => (
+      <div key={attribute.id + this.props.product.id} className="attributes">
+        {attribute.id}:
+        <div className="attribute">
+          {attribute.type === 'swatch'
+            ? attribute.items.map((item) => {
+                return (
+                  <div
+                    key={item.id + this.props.product.id}
+                    className={`attribute-value swatch ${
+                      this.state.activeAttributes[toCamelCase(attribute.id)] ===
+                      item.id
+                        ? ' active'
+                        : ''
+                    } `}
+                    style={{ backgroundColor: item.value }}
+                    title={item.id}
+                    onClick={(event) => {
+                      handleButtonAnimation(event);
+                      this.handleAttributeChange(attribute.id, item.id);
+                    }}
+                  ></div>
+                );
+              })
+            : attribute.items.map((item) => {
+                return (
+                  <div
+                    key={item.id + this.props.product.id}
+                    className={`attribute-value${
+                      this.state.activeAttributes[toCamelCase(attribute.id)] ===
+                      item.id
+                        ? ' active'
+                        : ''
+                    } `}
+                    onClick={(event) => {
+                      handleButtonAnimation(event);
+                      this.handleAttributeChange(attribute.id, item.id);
+                    }}
+                  >
+                    {item.value}
+                  </div>
+                );
+              })}
+        </div>
+      </div>
+    ));
+  }
+
+  checkConfirm() {
+    return this.props.product.inStock ? (
+      <button
+        className="green"
+        onClick={(event) => {
+          if (
+            Object.values(this.state.activeAttributes).some(
+              (element) => element === ''
+            )
+          ) {
+            Array.from(document.querySelectorAll('.attribute-value')).forEach(
+              (element) =>
+                handleButtonAnimation(
+                  { currentTarget: element },
+                  'shadow-drop-2-center-warning'
+                )
+            );
+          } else {
+            const sameProduct = Object.values(this.props.cartProducts).find(
+              (cartProduct) =>
+                cartProduct.product.name === this.props.product.name &&
+                shallowEqual(
+                  cartProduct.attributes,
+                  this.state.activeAttributes
+                )
+            );
+            if (sameProduct) {
+              this.props.dispatch(
+                changeCount({ id: sameProduct.id, change: 1 })
+              );
+            } else
+              this.props.dispatch(
+                addProductToCart({
+                  product: this.props.product,
+                  attributes: this.state.activeAttributes,
+                })
+              );
+            handleButtonAnimation(event);
+          }
+        }}
+      >
+        add to cart
+      </button>
+    ) : (
+      <button className="not-availble">out of stock</button>
+    );
+  }
+
   render() {
     return Object.keys(this.props.product).length !== 0 ? (
       <div className="page">
@@ -64,125 +162,15 @@ class ProductPage extends React.Component {
           <div className="info">
             <h2 className="brand">{this.props.product.brand}</h2>
             <h3 className="product-name">{this.props.product.name}</h3>
-
-            {this.props.product.attributes.map((attribute) => (
-              <div
-                key={attribute.id + this.props.product.id}
-                className="attributes"
-              >
-                {attribute.id}:
-                <div className="attribute">
-                  {attribute.type === 'swatch'
-                    ? attribute.items.map((item) => {
-                        return (
-                          <div
-                            key={item.id + this.props.product.id}
-                            className={`attribute-value swatch ${
-                              this.state.activeAttributes[
-                                toCamelCase(attribute.id)
-                              ] === item.id
-                                ? ' active'
-                                : ''
-                            } `}
-                            style={{ backgroundColor: item.value }}
-                            title={item.id}
-                            onClick={(event) => {
-                              handleButtonAnimation(event);
-                              this.handleAttributeChange(attribute.id, item.id);
-                            }}
-                          ></div>
-                        );
-                      })
-                    : attribute.items.map((item) => {
-                        return (
-                          <div
-                            key={item.id + this.props.product.id}
-                            className={`attribute-value${
-                              this.state.activeAttributes[
-                                toCamelCase(attribute.id)
-                              ] === item.id
-                                ? ' active'
-                                : ''
-                            } `}
-                            onClick={(event) => {
-                              handleButtonAnimation(event);
-                              this.handleAttributeChange(attribute.id, item.id);
-                            }}
-                          >
-                            {item.value}
-                          </div>
-                        );
-                      })}
-                </div>
-              </div>
-            ))}
+            {this.renderAttributesButtons()}
             <div className="price">Price:</div>
             <div className="price-value">
-              {Object.values(
-                Object.values(
-                  this.props.product.prices.filter(
-                    (elementObj) =>
-                      elementObj.currency.label ===
-                      this.props.active.currency.label
-                  )[0]
-                )
-                  .slice(-2)
-                  .map((price) => {
-                    if (typeof price === 'number' && isFinite(price)) {
-                      return price;
-                    }
-                    return price.symbol;
-                  })
-              )}
+              <Price
+                prices={this.props.product.prices}
+                currency={this.props.active.currency}
+              />
             </div>
-            {this.props.product.inStock ? (
-              <button
-                className="green"
-                onClick={(event) => {
-                  if (
-                    Object.values(this.state.activeAttributes).some(
-                      (element) => element === ''
-                    )
-                  ) {
-                    Array.from(
-                      document.querySelectorAll('.attribute-value')
-                    ).forEach((element) =>
-                      handleButtonAnimation(
-                        { currentTarget: element },
-                        'shadow-drop-2-center-warning'
-                      )
-                    );
-                  } else {
-                    const sameProduct = Object.values(
-                      this.props.cartProducts
-                    ).find(
-                      (cartProduct) =>
-                        cartProduct.product.name === this.props.product.name &&
-                        shallowEqual(
-                          cartProduct.attributes,
-                          this.state.activeAttributes
-                        )
-                    );
-                    if (sameProduct) {
-                      this.props.dispatch(
-                        changeCount({ id: sameProduct.id, change: 1 })
-                      );
-                    } else
-                      this.props.dispatch(
-                        addProductToCart({
-                          product: this.props.product,
-                          attributes: this.state.activeAttributes,
-                        })
-                      );
-                    handleButtonAnimation(event);
-                  }
-                }}
-              >
-                add to cart
-              </button>
-            ) : (
-              <button className="not-availble">out of stock</button>
-            )}
+            {this.checkConfirm()}
             <div className="description">
               {parse(this.props.product.description)}
             </div>

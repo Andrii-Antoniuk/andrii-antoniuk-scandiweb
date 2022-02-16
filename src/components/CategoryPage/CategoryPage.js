@@ -30,8 +30,52 @@ class CategoryPage extends React.Component {
     }
   }
 
-  handleLeave(event) {
+  handleLeave() {
     this.setState({ whichHovered: '' });
+  }
+
+  findActiveCategory() {
+    return Object.values(this.props.products).find(
+      (productsObject) =>
+        Object.values(productsObject)[0].category === this.props.active.category
+    );
+  }
+
+  renderCategory() {
+    if (this.props.active.category === 'all') {
+      return Object.keys(this.props.products).length ? (
+        <>
+          {Object.values(this.props.products).map((productsObject) => {
+            return Object.values(productsObject).map((product) => (
+              <ProductCard
+                key={product.name}
+                product={product}
+                handleEnter={this.handleEnter}
+                handleLeave={this.handleLeave}
+                whichHovered={this.state.whichHovered}
+              />
+            ));
+          })}
+        </>
+      ) : (
+        'Loading...'
+      );
+    } else {
+      let categoryArray;
+      const category = this.findActiveCategory();
+      category
+        ? (categoryArray = Object.values(category))
+        : (categoryArray = []);
+      return categoryArray.map((product) => (
+        <ProductCard
+          key={product.name}
+          product={product}
+          handleEnter={this.handleEnter}
+          handleLeave={this.handleLeave}
+          whichHovered={this.state.whichHovered}
+        />
+      ));
+    }
   }
 
   render() {
@@ -39,71 +83,14 @@ class CategoryPage extends React.Component {
       <div className="page">
         <h1>{this.props.active.category}</h1>
         {this.props.products ? (
-          <div id="products">
-            {this.props.active.category === 'all' ? (
-              Object.keys(this.props.products).length ? (
-                <>
-                  {Object.values(this.props.products).map((productsObject) => {
-                    return Object.values(productsObject).map((product) => (
-                      <ProductCard
-                        key={product.name}
-                        product={product}
-                        handleEnter={this.handleEnter}
-                        handleLeave={this.handleLeave}
-                        whichHovered={this.state.whichHovered}
-                      />
-                    ));
-                  })}
-                </>
-              ) : (
-                'Loading...'
-              )
-            ) : (
-              <>
-                {/*I know, that I can use index of category instead of name, but then I'll also check is array item with that index exist, so i decided not to change everything*/}
-                {Object.values(this.props.products).find(
-                  /*Because of render is the first method in component lifecycle (after constructor, of course), I have to check is my product already fetched. 
-                      I don't have to do it if I'm not using LocalStorage.
-                      Also, I have a question about that, because I don't have to add same checking in line 71 and below, and I don't truly understand why.
-                      */
-                  (productsObject) => {
-                    return (
-                      Object.values(productsObject)[0].category ===
-                      this.props.active.category
-                    );
-                  }
-                )
-                  ? Object.values(
-                      Object.values(
-                        this.props.products
-                      ) /*this may be very dummy way to solve it, but I didn't find another */
-                        .find((productsObject) => {
-                          return (
-                            Object.values(productsObject)[0].category ===
-                            this.props.active.category
-                          );
-                        })
-                    ).map((product) => (
-                      <ProductCard
-                        key={product.id}
-                        product={product}
-                        handleEnter={this.handleEnter}
-                        handleLeave={this.handleLeave}
-                        whichHovered={this.state.whichHovered}
-                      />
-                    ))
-                  : 'Loading...'}
-              </>
-            )}
-          </div>
+          <div id="products">{this.renderCategory()}</div>
         ) : (
-          'Loading'
+          'Loading...'
         )}
       </div>
     );
   }
 }
-
 const mapStateToProps = (state) => {
   const { active, products } = state;
   return { active: active.active, products: products.products };

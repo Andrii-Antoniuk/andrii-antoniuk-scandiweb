@@ -76,9 +76,16 @@ class CartPopup extends PureCart {
             <span>{product.brand}</span>
             <span>{product.name}</span>
             <span className="mini-price">
-              <Price product={product} currency={this.props.active.currency} />
+              <Price
+                prices={product.prices}
+                currency={this.props.active.currency}
+              />
             </span>
-            <Attributes mini="mini" attributes={attributes} product={product} />
+            <Attributes
+              mini="mini"
+              attributes={attributes}
+              productAttributes={product.attributes}
+            />
           </div>
           <div className="product-info">
             <Counter myProduct={myProduct} showDelete={this.showDelete} />

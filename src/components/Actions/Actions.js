@@ -17,10 +17,10 @@ class Actions extends React.Component {
       isShowingCart: false,
       timer: null,
     };
-    this.handleClick = this.handleClick.bind(this);
-    this.handleLeave = this.handleLeave.bind(this);
-    this.cancelLeave = this.cancelLeave.bind(this);
-    this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleClickSwitch = this.handleClickSwitch.bind(this);
+    this.handleLeaveSwitch = this.handleLeaveSwitch.bind(this);
+    this.cancelLeaveSwitch = this.cancelLeaveSwitch.bind(this);
+    this.handleClickOutsideSwitch = this.handleClickOutsideSwitch.bind(this);
     this.handleClickOutsideCart = this.handleClickOutsideCart.bind(this);
     this.handleClickCart = this.handleClickCart.bind(this);
   }
@@ -32,7 +32,7 @@ class Actions extends React.Component {
     document.querySelector('.container').classList.toggle('backdrop');
   }
 
-  handleLeave() {
+  handleLeaveSwitch() {
     this.setState({
       timer: setTimeout(
         function () {
@@ -43,7 +43,7 @@ class Actions extends React.Component {
     });
   }
 
-  handleClickOutside(event) {
+  handleClickOutsideSwitch(event) {
     if (
       event.target.nodeName !== 'HTML' &&
       (event.target.parentElement.id === 'currency' ||
@@ -54,7 +54,7 @@ class Actions extends React.Component {
     this.setState({ isShowingCurrency: false });
   }
 
-  handleClick() {
+  handleClickSwitch() {
     if (!this.state.isShowingCurrency) {
       this.setState({ isShowingCurrency: true });
     } else {
@@ -74,7 +74,7 @@ class Actions extends React.Component {
     document.querySelector('.container').classList.remove('backdrop');
   }
 
-  cancelLeave() {
+  cancelLeaveSwitch() {
     clearTimeout(this.state.timer);
   }
 
@@ -89,10 +89,22 @@ class Actions extends React.Component {
       });
   }
 
+  renderCartIconCounter() {
+    return Object.keys(this.props.cart).length === 0 ? null : (
+      <div id="item-counter">
+        {Object.values(this.props.cart)
+          .map((product) => product.count)
+          .reduce((prevValue, currValue) => {
+            return prevValue + currValue;
+          }, 0)}
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className="dd-wrapper">
-        <div id="currency" onClick={this.handleClick}>
+        <div id="currency" onClick={this.handleClickSwitch}>
           <span id="currency-symbol">
             {this.props.active.currency
               ? this.props.active.currency.symbol.slice(-1)
@@ -104,29 +116,21 @@ class Actions extends React.Component {
           ></div>
         </div>
 
-        <OutsideAlerter handleClickOutside={this.handleClickOutside}>
+        <OutsideAlerter handleClickOutside={this.handleClickOutsideSwitch}>
           <PopupWithTransition
             mounted={this.state.isShowingCurrency}
-            handleLeave={this.handleLeave}
-            cancelLeave={this.cancelLeave}
+            handleLeave={this.handleLeaveSwitch}
+            cancelLeave={this.cancelLeaveSwitch}
           >
             <CurrencySwitch
               currencies={this.props.currencies}
-              handleClick={this.handleClick}
+              handleClick={this.handleClickSwitch}
             />
           </PopupWithTransition>
         </OutsideAlerter>
         <div id="cart-icon" onClick={this.handleClickCart}>
           <CartIcon />
-          {Object.keys(this.props.cart).length === 0 ? null : (
-            <div id="item-counter">
-              {Object.values(this.props.cart)
-                .map((product) => product.count)
-                .reduce((prevValue, currValue) => {
-                  return prevValue + currValue;
-                }, 0)}
-            </div>
-          )}
+          {this.renderCartIconCounter()}
         </div>
         <OutsideAlerter handleClickOutside={this.handleClickOutsideCart}>
           <PopupWithTransition mounted={this.state.isShowingCart}>

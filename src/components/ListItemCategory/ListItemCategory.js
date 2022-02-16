@@ -75,35 +75,36 @@ class ListItemCategory extends React.Component {
       },
     });
   }
+
+  renderCategoriesNames() {
+    return this.props.categories.names.map((element, index) => (
+      <li
+        key={element}
+        onClick={(event) => {
+          this.props.dispatch(changeActiveCategory(element));
+          this.props.dispatch(changeActivePage('plp'));
+          this.props.dispatch(changeActiveProduct(''));
+          this.handleClick(event);
+        }}
+        className={
+          element === this.props.active.category ? `${index} active` : index
+        }
+      >
+        {element}
+      </li>
+    ));
+  }
+
   render() {
     return (
-      <>
-        <nav>
-          {this.props.categories.names ? (
-            <ul className="list-elements">
-              {this.props.categories.names.map((element, index) => (
-                <li
-                  key={element}
-                  onClick={(event) => {
-                    this.props.dispatch(changeActiveCategory(element));
-                    this.props.dispatch(changeActivePage('plp'));
-                    this.props.dispatch(changeActiveProduct(''));
-                    this.handleClick(event);
-                  }}
-                  className={
-                    element === this.props.active.category
-                      ? `${index} active`
-                      : index
-                  }
-                >
-                  {element}
-                </li>
-              ))}
-              <div style={this.state.style}></div>
-            </ul>
-          ) : null}
-        </nav>
-      </>
+      <nav>
+        {this.props.categories.names ? (
+          <ul className="list-elements">
+            {this.renderCategoriesNames()}
+            <div style={this.state.style}></div>
+          </ul>
+        ) : null}
+      </nav>
     );
   }
 }
