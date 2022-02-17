@@ -29,7 +29,12 @@ class Actions extends React.Component {
     this.setState((prevState) => {
       return { isShowingCart: prevState.isShowingCart ? false : true };
     });
-    document.querySelector('.container').classList.toggle('backdrop');
+
+    const container = document.querySelector('.container');
+    container.classList.toggle('backdrop');
+    Array.from(container.classList).includes('backdrop')
+      ? (container.style.height = document.body.scrollHeight + 'px')
+      : (container.style.height = '0px');
   }
 
   handleLeaveSwitch() {
@@ -71,7 +76,9 @@ class Actions extends React.Component {
       return;
     }
     this.setState({ isShowingCart: false });
-    document.querySelector('.container').classList.remove('backdrop');
+    const container = document.querySelector('.container');
+    container.classList.remove('backdrop');
+    container.style.height = '0px';
   }
 
   cancelLeaveSwitch() {
