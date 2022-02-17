@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getProducts } from '../../features/productsSlice';
 import ProductCard from '../ProductCard/ProductCard';
 class CategoryPage extends React.Component {
   constructor(props) {
@@ -10,10 +9,6 @@ class CategoryPage extends React.Component {
     };
     this.handleEnter = this.handleEnter.bind(this);
     this.handleLeave = this.handleLeave.bind(this);
-  }
-
-  componentDidMount() {
-    this.props.dispatch(getProducts());
   }
 
   handleEnter(event) {

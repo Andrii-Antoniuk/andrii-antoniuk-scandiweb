@@ -45,4 +45,5 @@ export default class Attributes extends React.Component {
 
 Attributes.defaultProps = {
   mini: '',
+  productAttributes: [],
 };

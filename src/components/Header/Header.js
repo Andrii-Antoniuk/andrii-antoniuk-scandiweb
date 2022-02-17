@@ -4,8 +4,12 @@ import Actions from '../Actions/Actions';
 import ListItemCategory from '../ListItemCategory/ListItemCategory';
 import './Header.css';
 import { connect } from 'react-redux';
+import { getProducts } from '../../features/productsSlice';
 
 class Header extends React.Component {
+  componentDidMount() {
+    this.props.dispatch(getProducts());
+  }
   render() {
     return (
       <header>

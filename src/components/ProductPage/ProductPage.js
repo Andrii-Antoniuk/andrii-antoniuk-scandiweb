@@ -193,3 +193,9 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(ProductPage);
+
+ProductPage.defaultProps = {
+  active: {},
+  product: {},
+  cartProducts: {},
+};
