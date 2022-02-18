@@ -186,6 +186,10 @@ circle {
   cursor: auto;
 }
 
+.page .popup:not(.confirm-delete) {
+  position: initial;
+}
+
 /* 
 Animations
 */

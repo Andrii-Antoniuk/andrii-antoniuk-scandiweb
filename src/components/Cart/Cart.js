@@ -10,14 +10,18 @@ export class Cart extends React.Component {
 
   showDelete(event, id) {
     const child = event.currentTarget.getBoundingClientRect();
-    const scrollTop = document.getElementById('cart-popup').scrollTop;
-    const parent = document
-      .getElementById('cart-popup')
-      .getBoundingClientRect();
+    const scrollTop = document.getElementById('cart-popup')
+      ? document.getElementById('cart-popup').scrollTop
+      : 0;
+    const parent = document.getElementById('cart-popup')
+      ? document.getElementById('cart-popup').getBoundingClientRect()
+      : document.querySelector('.page').getBoundingClientRect();
     let style = {
       top: `${(scrollTop + child.top - parent.top - 35).toFixed(0)}px`,
       left: `${(child.left - parent.left - 50).toFixed(0)}px`,
     };
+    console.log(style.top);
+
     this.setState({ showDelete: true, style, idToDelete: id });
   }
 
